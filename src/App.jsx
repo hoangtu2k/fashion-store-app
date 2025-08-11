@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import AdminLayout from './layouts/AdminLayout';
+import HomeLayout from './layouts/HomeLayout';
 
-function App() {
-  const [count, setCount] = useState(0)
+import Dashboard from '@pages/Dashboard';
+import Products from '@pages/Products';
+import Orders from '@pages/orders/Orders';
+import CreateOrder from '@pages/orders/CreateOrder';
+import POS from '@pages/POS';
+import Customers from '@pages/Customers';
+import Settings from '@pages/Settings';
+import Login from '@pages/account/Login';
+
+import Home from '@pages/home/Home';
+import Cart from '@pages/home/Cart';
+import CheckOut from '@pages/home/CheckOut';
+import LoginCustomer from '@pages/home/account/Login';
+import ProductDetail from '@pages/home/ProductDetail';
+import Profile from '@pages/home/account/Profile';
+import Address from '@pages/home/account/Addresses';
+import Account from '@pages/home/account/Account';
+
+export default function App() {
+  const isAuthenticated = true; // mock
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/orders/list" element={<Orders />} />
+          <Route path="/admin/orders/create" element={<CreateOrder />} />
+          <Route path="/admin/customers" element={<Customers />} />
+          <Route path="/admin/settings" element={<Settings />} />
+        </Route>
 
-export default App
+        {/* POS route riêng */}
+        <Route path="/pos" element={<POS />} />
+
+        {/* Home routes */}
+        <Route element={<HomeLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+
+          <Route path="/account" element={<Account />} />
+          <Route path="/account/info" element={<Profile />} />
+          <Route path="/account/address" element={<Address />} />
+
+          <Route path="/account/login" element={<LoginCustomer />} />
+        </Route>
+
+        {/* Redirect */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
+}

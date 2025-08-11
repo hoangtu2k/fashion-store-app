@@ -1,0 +1,146 @@
+
+
+/* POS Custom Styles */
+.pos-tabs .nav-link {
+  border-radius: 0;
+  border: none;
+  color: #495057;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.pos-tabs .nav-link.active {
+  color: #0d6efd;
+  background-color: transparent;
+  border-bottom: 2px solid #0d6efd;
+}
+
+.pos-tabs .nav-item {
+  position: relative;
+}
+
+/* Custom scrollbar for cart */
+.cart-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #adb5bd #f8f9fa;
+}
+
+.cart-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-scrollable::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.cart-scrollable::-webkit-scrollbar-thumb {
+  background-color: #adb5bd;
+  border-radius: 3px;
+}
+
+/* Product hover effect */
+.product-card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pos-product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Thêm vào file CSS của bạn */
+.pos-header-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+/* Hiệu ứng khi hover */
+.pos-header-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Nút thêm hóa đơn */
+.add-bill-btn {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+}
+
+.add-bill-btn:hover {
+  background-color: #0b5ed7;
+}
+
+/* POS Container */
+.pos-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Header */
+.pos-header {
+  z-index: 1020;
+  height: 56px;
+}
+
+/* Product card */
+.product-card {
+  transition: all 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Cart column */
+.pos-cart-column {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px);
+}
+
+/* Scrollable cart items */
+.pos-cart-column .card-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 250px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Reduce padding on mobile */
+  .pos-container .p-3 {
+    padding: 1rem !important;
+  }
+  
+  /* Stack cart below products on mobile */
+  .pos-container .row > [class*="col-"] {
+    width: 100%;
+  }
+  
+  /* Full height cart on mobile */
+  .pos-cart-column {
+    height: auto;
+    max-height: 50vh;
+    border-top: 1px solid #dee2e6;
+    border-left: none;
+  }
+}
+
+.cart-container{
+  width: 70% !important;
+}
+.payment-container {
+  width: 30% !important;
+}
+
+
