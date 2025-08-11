@@ -7,25 +7,46 @@ import {
   Paper,
   Stack,
   InputAdornment,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import { authService } from "@api/authService";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-    // Thêm xử lý đăng nhập ở đây
-  };
+  const handleLogin = async () => {
+  setError("");
+  if (!email || !password) {
+    setError("Vui lòng nhập email và mật khẩu");
+    return;
+  }
+
+  try {
+    const res = await authService.login({ username: email, password });
+    const { token, user } = res.data;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // Load lại trang và chuyển đến /account
+    window.location.href = "/account";
+  } catch (err) {
+    setError(err.response?.data || "Đăng nhập thất bại, vui lòng kiểm tra lại.");
+  }
+};
+
 
   return (
     <Box
       sx={{
-        minHeight: "100vh",    
+        minHeight: "90vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -48,6 +69,12 @@ export default function Login() {
         <Typography variant="body2" color="text.secondary" mb={3}>
           Đăng ký thành viên và nhận ngay ưu đãi 10% cho đơn hàng đầu tiên
         </Typography>
+
+        {error && (
+          <Typography variant="body2" color="error" mb={2}>
+            {error}
+          </Typography>
+        )}
 
         <Stack spacing={2}>
           <TextField
@@ -112,14 +139,16 @@ export default function Login() {
 
         <Typography variant="body2" mt={1}>
           Chưa có tài khoản?{" "}
-          <Typography
-            component="span"
-            color="primary"
-            fontWeight="bold"
-            sx={{ cursor: "pointer" }}
-          >
-            Đăng ký ngay
-          </Typography>
+          <Link to="/account/register" style={{ textDecoration: "none" }}>
+            <Typography
+              component="span"
+              color="primary"
+              fontWeight="bold"
+              sx={{ cursor: "pointer" }}
+            >
+              Đăng ký ngay
+            </Typography>
+          </Link>
         </Typography>
       </Paper>
     </Box>
