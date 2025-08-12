@@ -6,6 +6,8 @@
       "@pages/*": ["pages/*"],
       "@style/*": ["style/*"],
       "@api/*": ["api/*"],
+      "@layouts/*": ["layouts/*"],
+      "@contexts/*": ["contexts/*"],
     }
   }
 }

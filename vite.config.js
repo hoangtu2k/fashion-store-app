@@ -9,7 +9,9 @@ export default defineConfig({
       '@components': path.resolve(__dirname, 'src/components'),
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@style': path.resolve(__dirname, 'src/style'),
-      '@api': path.resolve(__dirname, 'src/api')
+      '@api': path.resolve(__dirname, 'src/api'),
+      '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@contexts': path.resolve(__dirname, 'src/contexts')
     }
   }
 });

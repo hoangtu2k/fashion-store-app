@@ -1,4 +1,4 @@
-import '../style/pos.css'
+import '@style/pos.css';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Container, Paper, TextField, Table, TableBody, TableCell, TableContainer,

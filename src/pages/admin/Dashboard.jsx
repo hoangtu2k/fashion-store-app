@@ -1,6 +1,6 @@
-import StatsCard from '../components/Dashboard/StatsCard'
-import RecentOrders from '../components/Dashboard/RecentOrders'
-import SalesChart from '../components/Dashboard/SalesChart'
+import StatsCard from '@components/Dashboard/StatsCard'
+import RecentOrders from '@components/Dashboard/RecentOrders'
+import SalesChart from '@components/Dashboard/SalesChart'
 
 export default function Dashboard() {
   const statsData = [
