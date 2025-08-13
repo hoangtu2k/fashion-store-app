@@ -11,6 +11,7 @@ import Orders from "@pages/admin/orders/Orders";
 import CreateOrder from "@pages/admin/orders/CreateOrder";
 import POS from "@pages/admin/POS";
 import Customers from "@pages/admin/Customers";
+import Users from "@pages/admin/Users";
 import Settings from "@pages/admin/Settings";
 import Login from "@pages/admin/account/Login";
 
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/admin/orders/list" element={<Orders />} />
               <Route path="/admin/orders/create" element={<CreateOrder />} />
               <Route path="/admin/customers" element={<Customers />} />
+              <Route path="/admin/users" element={<Users />} />
               <Route path="/admin/settings" element={<Settings />} />
               <Route path="/pos" element={<POS />} />
             </Route>

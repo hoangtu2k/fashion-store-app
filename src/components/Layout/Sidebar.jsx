@@ -1,6 +1,6 @@
-import React ,{ useState } from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { ChevronDown, ChevronRight, HouseDoor, People, Box, Cart, GraphUp, Gear, Cash } from 'react-bootstrap-icons'
+import { ChevronDown, ChevronRight, HouseDoor, People, Box, Cart, GraphUp, Gear, Cash, PersonBadge } from 'react-bootstrap-icons'
 
 export default function Sidebar({ collapsed, toggleSidebar }) {
   const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false)
@@ -22,39 +22,53 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
           {collapsed ? '>' : <i className="bi bi-x-lg"></i>}
         </button>
       </div>
-      
+
       <ul className="nav nav-pills flex-column mb-auto px-2">
         {/* Dashboard Menu Item */}
         <li className="nav-item">
-          <NavLink 
-            to="/admin/dashboard" 
-            className={({ isActive }) => 
+          <NavLink
+            to="/admin/dashboard"
+            className={({ isActive }) =>
               `nav-link text-white ${isActive ? 'active' : ''}`
             }
           >
             <HouseDoor className="me-3" />
-            {!collapsed && <span>Dashboard</span>}
+            {!collapsed && <span>Tổng quan</span>}
           </NavLink>
         </li>
 
         {/* Customers Menu Item */}
         <li className="nav-item">
-          <NavLink 
-            to="/admin/customers" 
-            className={({ isActive }) => 
+          <NavLink
+            to="/admin/customers"
+            className={({ isActive }) =>
               `nav-link text-white ${isActive ? 'active' : ''}`
             }
           >
             <People className="me-3" />
-            {!collapsed && <span>Customers</span>}
+            {!collapsed && <span>Khách hàng</span>}
           </NavLink>
         </li>
 
+        {/* User Menu Item */}
+        <li className="nav-item">
+          <NavLink
+            to="/admin/users"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? 'active' : ''}`
+            }
+          >
+            <PersonBadge className="me-3" />
+            {!collapsed && <span>Nhân viên</span>}
+          </NavLink>
+        </li>
+
+
         {/* Products Menu Item */}
         <li className="nav-item">
-          <NavLink 
-            to="/admin/products" 
-            className={({ isActive }) => 
+          <NavLink
+            to="/admin/products"
+            className={({ isActive }) =>
               `nav-link text-white ${isActive ? 'active' : ''}`
             }
           >
@@ -65,7 +79,7 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
 
         {/* Orders Dropdown Menu */}
         <li className="nav-item">
-          <div 
+          <div
             className="nav-link text-white d-flex justify-content-between align-items-center cursor-pointer"
             onClick={toggleOrdersDropdown}
           >
@@ -77,13 +91,13 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
               ordersDropdownOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />
             )}
           </div>
-          
+
           {!collapsed && ordersDropdownOpen && (
             <ul className="nav flex-column ps-5">
               <li className="nav-item">
-                <NavLink 
-                  to="/admin/orders/list" 
-                  className={({ isActive }) => 
+                <NavLink
+                  to="/admin/orders/list"
+                  className={({ isActive }) =>
                     `nav-link text-white ${isActive ? 'active' : ''}`
                   }
                 >
@@ -92,9 +106,9 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink 
-                  to="/admin/orders/create" 
-                  className={({ isActive }) => 
+                <NavLink
+                  to="/admin/orders/create"
+                  className={({ isActive }) =>
                     `nav-link text-white ${isActive ? 'active' : ''}`
                   }
                 >
@@ -108,7 +122,7 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
 
         {/* Reports Dropdown Menu */}
         <li className="nav-item">
-          <div 
+          <div
             className="nav-link text-white d-flex justify-content-between align-items-center cursor-pointer"
             onClick={toggleReportsDropdown}
           >
@@ -120,13 +134,13 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
               reportsDropdownOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />
             )}
           </div>
-          
+
           {!collapsed && reportsDropdownOpen && (
             <ul className="nav flex-column ps-5">
               <li className="nav-item">
-                <NavLink 
-                  to="/admin/reports/sales" 
-                  className={({ isActive }) => 
+                <NavLink
+                  to="/admin/reports/sales"
+                  className={({ isActive }) =>
                     `nav-link text-white ${isActive ? 'active' : ''}`
                   }
                 >
@@ -135,9 +149,9 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink 
-                  to="/admin/reports/inventory" 
-                  className={({ isActive }) => 
+                <NavLink
+                  to="/admin/reports/inventory"
+                  className={({ isActive }) =>
                     `nav-link text-white ${isActive ? 'active' : ''}`
                   }
                 >
@@ -151,8 +165,8 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
 
         {/* POS - Bán hàng trực tiếp */}
         <li className="nav-item">
-          <NavLink 
-            to="/pos" 
+          <NavLink
+            to="/pos"
             className="nav-link text-white d-flex align-items-center"
           >
             <Cash className={collapsed ? "mx-auto" : "me-3"} />
@@ -162,9 +176,9 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
 
         {/* Settings Menu Item */}
         <li className="nav-item">
-          <NavLink 
-            to="/admin/settings" 
-            className={({ isActive }) => 
+          <NavLink
+            to="/admin/settings"
+            className={({ isActive }) =>
               `nav-link text-white ${isActive ? 'active' : ''}`
             }
           >
@@ -177,9 +191,9 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
       {/* User Profile Section */}
       <div className="p-3 border-top border-secondary">
         <div className="d-flex align-items-center">
-          <img 
-            src="" 
-            className="rounded-circle me-2" 
+          <img
+            src=""
+            className="rounded-circle me-2"
             alt="User"
             width="40"
             height="40"
