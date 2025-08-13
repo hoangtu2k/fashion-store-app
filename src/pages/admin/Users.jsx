@@ -5,12 +5,10 @@ import axios from "axios";
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
-
-  const [showAssignModal, setShowAssignModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRoleIds, setSelectedRoleIds] = useState([]);
 
-  // Load danh sách user và roles khi component mount
   useEffect(() => {
     fetchUsers();
     fetchRoles();
@@ -28,86 +26,102 @@ export default function Users() {
       .catch(console.error);
   };
 
-  // Mở modal phân quyền và load roles của user đó
-  const openAssignModal = (user) => {
-    setSelectedUserId(user.id);
-    // Nếu API user list đã có roles, dùng luôn
-    if (user.roles && user.roles.length > 0) {
-      setSelectedRoleIds(user.roles.map(r => r.id));
-      setShowAssignModal(true);
-    } else {
-      // Nếu không có roles kèm theo user, fetch riêng
-      axios.get(`/api/admin/users/${user.id}`)
-        .then(res => {
-          setSelectedRoleIds(res.data.roles ? res.data.roles.map(r => r.id) : []);
-          setShowAssignModal(true);
-        })
-        .catch(() => {
-          setSelectedRoleIds([]);
-          setShowAssignModal(true);
-        });
-    }
+  const openModal = (user) => {
+    setSelectedUser(user);
+    setSelectedRoleIds(user.roles ? user.roles.map(r => r.id) : []);
+    setShowModal(true);
   };
 
-  const closeAssignModal = () => {
-    setShowAssignModal(false);
-    setSelectedUserId(null);
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedUser(null);
     setSelectedRoleIds([]);
   };
 
-  // Thêm/xóa role khi checkbox được click
   const toggleRole = (roleId) => {
-    setSelectedRoleIds(prev => 
-      prev.includes(roleId) 
-        ? prev.filter(id => id !== roleId) 
+    setSelectedRoleIds(prev =>
+      prev.includes(roleId)
+        ? prev.filter(id => id !== roleId)
         : [...prev, roleId]
     );
   };
 
-  // Gửi danh sách roleId đã chọn lên backend
-  const saveRoles = () => {
-    axios.put(`/api/admin/users/${selectedUserId}/roles`, selectedRoleIds)
-      .then(() => {
-        alert("Cập nhật quyền thành công");
-        fetchUsers(); // reload user list để cập nhật roles
-        closeAssignModal();
-      })
-      .catch(() => alert("Lỗi khi cập nhật quyền"));
+  const handleChange = (e) => {
+    setSelectedUser({
+      ...selectedUser,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  return (
-    <div className="container mt-4">
-      <h4>User Management</h4>
+  const saveUser = () => {
+    const payload = {
+      fullName: selectedUser.fullName,
+      email: selectedUser.email,
+      phone: selectedUser.phone,
+      username: selectedUser.username,
+      code: selectedUser.code,
+      status: selectedUser.status,
+      password: selectedUser.password, // Nếu để trống backend không đổi mật khẩu
+      roleIds: selectedRoleIds,
+    };
 
-      <Table striped bordered hover responsive className="mt-3">
+    axios.put(`/api/admin/users/${selectedUser.id}`, payload)
+      .then(() => {
+        alert("Cập nhật thành công");
+        fetchUsers();
+        closeModal();
+      })
+      .catch(() => alert("Lỗi khi cập nhật"));
+  };
+
+  // Hàm xóa user
+  const deleteUser = (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa user này?")) {
+      axios.put(`/api/admin/users/status/${id}`)
+        .then(() => {
+          alert("Xóa user thành công");
+          fetchUsers();
+        })
+        .catch(() => alert("Lỗi khi xóa user"));
+    }
+  };
+
+
+  return (
+    <div>
+      <h4>Quản lý User</h4>
+
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>STT</th>
-            <th>Full Name</th>
+            <th>Họ tên</th>
             <th>Email</th>
-            <th>Phone</th>
-            <th>Joined Date</th>
-            <th>Roles</th>
-            <th>Actions</th>
+            <th>Điện thoại</th>
+            <th>Ngày tạo</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user, idx) => (
+          {users.map(user => (
             <tr key={user.id}>
-              <td>{idx + 1}</td>
+              <td>{user.id}</td>
               <td>{user.fullName}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>
-              <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}</td>
+              <td>{new Date(user.createdAt).toLocaleDateString()}</td>
               <td>
-                {(user.roles || []).map(r => r.name).join(", ")}
-              </td>
-              <td>
-                <button 
-                  className="btn btn-sm btn-outline-warning" 
-                  onClick={() => openAssignModal(user)}
+                <button
+                  className="btn btn-sm btn-outline-primary me-2"
+                  onClick={() => openModal(user)}
                 >
-                  <i className="bi bi-shield-lock"></i> Phân quyền
+                  Sửa & Phân quyền
+                </button>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => deleteUser(user.id)}
+                >
+                  Xóa
                 </button>
               </td>
             </tr>
@@ -115,28 +129,80 @@ export default function Users() {
         </tbody>
       </Table>
 
-      {/* Modal phân quyền */}
-      <Modal show={showAssignModal} onHide={closeAssignModal}>
+      <Modal show={showModal} onHide={closeModal} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Phân quyền nhân viên</Modal.Title>
+          <Modal.Title>Chỉnh sửa User & Phân quyền</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            {roles.map(role => (
-              <Form.Check 
-                key={role.id}
-                type="checkbox"
-                id={`role-${role.id}`}
-                label={role.name}
-                checked={selectedRoleIds.includes(role.id)}
-                onChange={() => toggleRole(role.id)}
-              />
-            ))}
-          </Form>
+          {selectedUser && (
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Code</Form.Label>
+                <Form.Control
+                  name="code"
+                  value={selectedUser.code || ""}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Họ tên</Form.Label>
+                <Form.Control
+                  name="fullName"
+                  value={selectedUser.fullName || ""}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  name="email"
+                  type="email"
+                  value={selectedUser.email || ""}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Điện thoại</Form.Label>
+                <Form.Control
+                  name="phone"
+                  value={selectedUser.phone || ""}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Trạng thái</Form.Label>
+                <Form.Select
+                  name="status"
+                  value={selectedUser.status || ""}
+                  onChange={handleChange}
+                >
+                  <option value="">-- Chọn trạng thái --</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Label>Phân quyền</Form.Label>
+              {roles.map(role => (
+                <Form.Check
+                  key={role.id}
+                  type="checkbox"
+                  id={`role-${role.id}`}
+                  label={role.name}
+                  checked={selectedRoleIds.includes(role.id)}
+                  onChange={() => toggleRole(role.id)}
+                />
+              ))}
+            </Form>
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeAssignModal}>Hủy</Button>
-          <Button variant="primary" onClick={saveRoles}>Lưu</Button>
+          <Button variant="secondary" onClick={closeModal}>Hủy</Button>
+          <Button variant="primary" onClick={saveUser}>Lưu</Button>
         </Modal.Footer>
       </Modal>
     </div>
