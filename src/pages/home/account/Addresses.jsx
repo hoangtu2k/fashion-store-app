@@ -1,11 +1,13 @@
 import ProfileSidebar from "@components/Home/SideProfile";
-import { Avatar } from "@mui/material";
-import '@style/profile.css';
+import { Avatar, Button, Typography } from "@mui/material";
+import "@style/profile.css";
 import { Link } from "react-router-dom";
 
 export default function Address() {
   const user = {
     name: "Hoàng Tú",
+    address: "Số 2, ngách 105/47 Hồ Tùng Mậu, Mai Dịch, Cầu Giấy, Vietnam",
+    phone: "0123456789",
     avatar: "",
   };
 
@@ -14,30 +16,36 @@ export default function Address() {
       <div className="row">
         {/* Menu bên trái */}
         <ProfileSidebar />
-        
+
         {/* Nội dung bên phải */}
         <div className="col-md-9">
-          {/* Banner */}
-          <div className="profile-banner">
-            <Avatar
-              sx={{
-                bgcolor: "#ffffff33",
-                width: 64,
-                height: 64,
-                fontSize: "1.5rem",
-                marginRight: "15px",
-                border: "2px solid white",
-              }}
-            >
-              {user.name.charAt(0)}
-            </Avatar>
-            <h5 className="mb-0">{user.name}</h5>
-          </div>
-
           {/* Nội dung mock */}
           <div className="profile-content">
-            <div className="profile-empty-icon">💬</div>
-            <p>Không có lịch sử đặt hàng trong 3 tháng gần nhất.</p>
+            <div className="profile-section">
+              <Typography variant="h6" gutterBottom>
+                ĐỊA CHỈ
+              </Typography>
+              <hr />
+              <div className="label-value-pair">
+                <span className="label">Họ tên</span>
+                <span className="value">{user.name}</span>
+              </div>
+              <div className="label-value-pair">
+                <span className="label">Địa chỉ</span>
+                <span className="value">{user.address}</span>
+              </div>
+              <div className="label-value-pair">
+                <span className="label">Số điện thoại</span>
+                <span className="value">{user.phone}</span>
+              </div>
+              <div className="label-value-pair">
+                <span className="label"></span> {/* Empty label for alignment */}
+                <Button variant="contained" color="primary">
+                  Cập nhật
+                </Button>
+              </div>
+              <hr />
+            </div>
           </div>
         </div>
       </div>

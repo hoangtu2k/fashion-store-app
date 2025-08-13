@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -11,40 +11,30 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "@api/authService";
+import { useAuth } from "@contexts/AuthContext";
 
-export default function Login() {
-  const navigate = useNavigate();
-
+export default function LoginCustomer() {
+  const { loginCustomer } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
-  setError("");
-  if (!email || !password) {
-    setError("Vui lòng nhập email và mật khẩu");
-    return;
-  }
-
-  try {
-    const res = await authService.login({ username: email, password });
-    const { token, user } = res.data;
-
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
-
-    // Load lại trang và chuyển đến /account
-    window.location.href = "/account";
-  } catch (err) {
-    setError(err.response?.data || "Đăng nhập thất bại, vui lòng kiểm tra lại.");
-  }
-};
-
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      await loginCustomer(username, password);
+      navigate("/account");
+    } catch (err) {
+      setError("Đăng nhập thất bại! Vui lòng kiểm tra email hoặc mật khẩu.");
+    }
+  };
 
   return (
     <Box
+      component="form"
+      onSubmit={handleLogin}
       sx={{
         minHeight: "90vh",
         display: "flex",
@@ -81,8 +71,8 @@ export default function Login() {
             label="Email"
             variant="outlined"
             fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -119,10 +109,10 @@ export default function Login() {
           />
 
           <Button
+            type="submit" // Add type="submit" to trigger form submission
             variant="contained"
             fullWidth
             sx={{ py: 1.5, fontWeight: "bold", borderRadius: 2 }}
-            onClick={handleLogin}
           >
             Đăng Nhập
           </Button>

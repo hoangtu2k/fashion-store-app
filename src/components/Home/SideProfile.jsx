@@ -1,11 +1,9 @@
+import { useAuth } from "@contexts/AuthContext";
 import { Link } from "react-router-dom";
 
 export default function ProfileSidebar() {
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.href = "/account/login";
-  };
+  
+  const {  logoutCustomer  } = useAuth();
 
   return (
     <div className="col-md-3 profile-sidebar">
@@ -32,7 +30,7 @@ export default function ProfileSidebar() {
           </li>
           <li>
             <button
-              onClick={handleLogout}
+              onClick={logoutCustomer}
               style={{
                 background: "none",
                 border: "none",

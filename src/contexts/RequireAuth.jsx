@@ -1,19 +1,15 @@
-// src/contexts/RequireAuth.jsx
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
-export function RequireAuthAdmin({ isAuthenticated }) {
-  if (!isAuthenticated) {
-    // Chưa đăng nhập admin, redirect về trang login admin
-    return <Navigate to="/admin/login" replace />;
-  }
-  return <Outlet />; // render các route con
-}
+export const RequireAuthAdmin = () => {
+  const { isAdminAuthenticated, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return isAdminAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;
+};
 
-export function RequireAuthCustomer({ isAuthenticated }) {
-  if (!isAuthenticated) {
-    // Chưa đăng nhập khách hàng, redirect về login khách
-    return <Navigate to="/account/login" replace />;
-  }
-  return <Outlet />;
-}
+export const RequireAuthCustomer = () => {
+  const { isCustomerAuthenticated, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return isCustomerAuthenticated ? <Outlet /> : <Navigate to="/account/login" />;
+};

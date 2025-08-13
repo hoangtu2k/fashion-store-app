@@ -1,9 +1,26 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Dropdown, Button } from 'react-bootstrap';
-import { Bell, Gear, Search } from 'react-bootstrap-icons';
+import { Bell, Search } from 'react-bootstrap-icons';
+import { useAuth } from '@contexts/AuthContext';
+import axios from 'axios';
 
 export default function Navbar({ toggleSidebar }) {
+  const { adminUser, logoutAdmin , token } = useAuth();
+  const [fullName, setFullName] = useState(adminUser?.fullName || '');
+
+  // Lấy thông tin user từ backend nếu chưa có
+  useEffect(() => {
+    if (!fullName && token) {
+      axios.get('/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => {
+          setFullName(res.data.fullName); // lấy fullname từ backend
+        })
+        .catch(err => console.error(err));
+    }
+  }, [fullName, token]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div className="container-fluid">
@@ -28,6 +45,7 @@ export default function Navbar({ toggleSidebar }) {
         </Form>
         
         <div className="ms-auto d-flex align-items-center">
+          {/* Notifications */}
           <Dropdown>
             <Dropdown.Toggle variant="light" id="dropdown-notifications">
               <Bell size={20} />
@@ -43,6 +61,7 @@ export default function Navbar({ toggleSidebar }) {
             </Dropdown.Menu>
           </Dropdown>
           
+          {/* User menu */}
           <Dropdown className="ms-3">
             <Dropdown.Toggle variant="light" id="dropdown-user">
               <img 
@@ -52,13 +71,13 @@ export default function Navbar({ toggleSidebar }) {
                 width="30"
                 height="30"
               />
-              Admin User
+              {fullName || 'Loading...'}
             </Dropdown.Toggle>
             <Dropdown.Menu align="end">
               <Dropdown.Item>Profile</Dropdown.Item>
               <Dropdown.Item>Settings</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={logoutAdmin}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>

@@ -4,17 +4,17 @@ import { AppBar, Badge, Button, Stack, Toolbar, Typography, Menu, MenuItem } fro
 import { Link } from "react-router-dom";
 
 export default function Header({ cartCount }) {
-  const [user, setUser] = useState(null);
+  const [customerUser, setCustomerUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     // Lấy user từ localStorage khi component load
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const storedCustomer = localStorage.getItem("customerUser");
+    if (storedCustomer) {
       try {
-        setUser(JSON.parse(storedUser));
+        setCustomerUser(JSON.parse(storedCustomer));
       } catch {
-        setUser(null);
+        setCustomerUser(null);
       }
     }
   }, []);
@@ -90,10 +90,10 @@ export default function Header({ cartCount }) {
             <Button
               color="inherit"
               component={Link}
-              to={user ? "/account" : "/account/login"}
-              title={user ? "Hồ sơ cá nhân" : "Đăng nhập"}
+              to={customerUser ? "/account" : "/account/login"}
+              title={customerUser ? "Hồ sơ cá nhân" : "Đăng nhập"}
             >
-              <span style={{ color: "black", marginRight: 4 }}>{user ? user.name : "Đăng nhập"}</span>
+              <span style={{ color: "black", marginRight: 4 }}>{customerUser ? customerUser.fullName : "Đăng nhập"}</span>
               <Person className="header-icon" />
             </Button>
           </Stack>
