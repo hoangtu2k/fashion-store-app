@@ -173,19 +173,6 @@ export default function Users() {
                 />
               </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Trạng thái</Form.Label>
-                <Form.Select
-                  name="status"
-                  value={selectedUser.status || ""}
-                  onChange={handleChange}
-                >
-                  <option value="">-- Chọn trạng thái --</option>
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                </Form.Select>
-              </Form.Group>
-
               <Form.Label>Phân quyền</Form.Label>
               {roles.map(role => (
                 <Form.Check
